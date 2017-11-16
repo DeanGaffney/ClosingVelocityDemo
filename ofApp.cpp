@@ -3,7 +3,7 @@
 //--------------------------------------------------------------
 void ofApp::setup(){
 	gui.setup();
-	isRunning = true;
+	isRunning = false;
 	reset();
 }
 
@@ -13,9 +13,9 @@ void ofApp::reset() {
 	p1StartPos = p1Pos = p1Vel = ofVec3f::zero();
 	p2StartPos = p2Pos = ofVec3f(3, 3, 0);
 	p2Vel = ofVec3f::zero();
+	distanceVector = (p1Pos - p2Pos).normalize();
 	closingVel = 0.0f;
-	dist = p1Pos.distance(p2Pos);
-	animate = false;
+	isRunning = false;
 }
 
 
@@ -24,13 +24,13 @@ void ofApp::update(){
 	float dt = ofClamp(ofGetLastFrameTime(), 0.0, 0.02);
 	if (!isRunning || dt == 0.0f) return;
 
-	if (animate) {
+	if (isRunning) {
 		t += dt;
 		p1Pos += dt * p1Vel;
 		p2Pos += dt * p2Vel;
 	}
-	dist = p1Pos.distance(p2Pos);
-	closingVel = (p2Vel - p1Vel).dot((p1Pos - p2Pos).getNormalized());
+	distanceVector = (p1Pos - p2Pos).normalize();
+	closingVel = distanceVector.dot(p2Vel - p1Vel);
 }
 
 //--------------------------------------------------------------
@@ -77,15 +77,13 @@ void ofApp::drawMainWindow() {
 		ImGui::Text("   Time = %8.1f", t);
 		if (ImGui::Button("Quit")) quit();
 
-		if (ImGui::Button(animate ? "Stop" : "Animate")) animate = !animate;
-
 		ImGui::SliderFloat2("P1Pos", &p1Pos.x, -5.0f, 5.0f);
 		ImGui::SliderFloat2("P1Vel", &p1Vel.x, -1.0f, 1.0f);
 
 		ImGui::SliderFloat2("P2Pos", &p2Pos.x, -5.0f, 5.0f);
 		ImGui::SliderFloat2("P2Vel", &p2Vel.x, -1.0f, 1.0f);
 
-		ImGui::Text("Distance = %.3f", dist);
+		ImGui::Text("Distance Vec = (% 6.2f,% 6.2f) ", distanceVector.x, distanceVector.y);
 		ImGui::Text("Closing Velocity = %.3f", closingVel);
 
 		if (ImGui::SliderFloat("Time", &t, 0.0f, 20.0f)) {

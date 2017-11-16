@@ -34,6 +34,6 @@ class ofApp : public ofBaseApp{
 
 		ofVec3f p1StartPos, p1Pos, p1Vel;
 		ofVec3f p2StartPos, p2Pos, p2Vel;
+		ofVec3f distanceVector;
 		float closingVel;
-		float dist;
 };
