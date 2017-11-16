@@ -87,7 +87,7 @@ void ofApp::drawMainWindow() {
 		ImGui::Text("Distance Vec = (% 6.2f,% 6.2f) ", distanceVector.x, distanceVector.y);
 		ImGui::Text("Closing Velocity = %.3f", closingVel);
 
-		if (ImGui::SliderFloat("Time", &t, 0.0f, 20.0f)) {
+		if (ImGui::SliderFloat("Time", &t, 0.0f, 10.0f)) {
 			p1Pos = p1StartPos + p1Vel * t;
 			p2Pos = p2StartPos + p2Vel * t;
 		}
