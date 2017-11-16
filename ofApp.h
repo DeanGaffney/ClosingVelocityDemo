@@ -37,5 +37,8 @@ class ofApp : public ofBaseApp{
 		ofVec3f distanceVector;
 		float closingVel;
 
+		vector<float> distanceLine;
+		vector<float> closingVelLine;
+
 		const float MAX_TIME = 10.0f;
 };

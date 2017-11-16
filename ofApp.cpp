@@ -16,6 +16,8 @@ void ofApp::reset() {
 	distanceVector = (p1Pos - p2Pos).normalize();
 	closingVel = 0.0f;
 	isRunning = false;
+	distanceLine.clear();
+	closingVelLine.clear();
 }
 
 
@@ -31,7 +33,9 @@ void ofApp::update(){
 	if (t >= MAX_TIME) isRunning = false;
 
 	distanceVector = (p1Pos - p2Pos).normalize();
+	distanceLine.insert(distanceLine.begin(), distanceVector.x);
 	closingVel = distanceVector.dot(p2Vel - p1Vel);
+	closingVelLine.insert(closingVelLine.begin(), closingVel);
 }
 
 //--------------------------------------------------------------
@@ -51,15 +55,15 @@ void ofApp::draw(){
 		ofDrawRectangle(-5, -5, 10, 10);
 		ofFill();
 		//particle 1 attributes
-		ofSetColor(150, 100, 0);
+		ofSetColor(0, 0, 255);
 		ofDrawCircle(p1Pos.x, p1Pos.y, 0.2);
-		ofSetColor(255, 0, 0);
+		ofSetColor(0, 200, 0);
 		ofDrawArrow(p1Pos, p1Pos + p1Vel);		//velocity arrow
 		
 		//particle 2 attributes
-		ofSetColor(100, 150, 0);
+		ofSetColor(0, 0, 255);
 		ofDrawCircle(p2Pos.x, p2Pos.y, 0.2);
-		ofSetColor(255, 0, 0);
+		ofSetColor(0, 200, 0);
 		ofDrawArrow(p2Pos, p2Pos + p2Vel);		//velocity arrow
 		ofSetColor(0, 0, 255);
 		ofDrawArrow(p2Pos, p2Pos + (p1Pos - p2Pos).getNormalized());		//direction arrow
@@ -90,6 +94,13 @@ void ofApp::drawMainWindow() {
 		if (ImGui::SliderFloat("Time", &t, 0.0f, 10.0f)) {
 			p1Pos = p1StartPos + p1Vel * t;
 			p2Pos = p2StartPos + p2Vel * t;
+			distanceLine.clear();
+			closingVelLine.clear();
+		}
+
+		if (ImGui::CollapsingHeader("Graphs")) {
+			if(!distanceLine.empty())ImGui::PlotLines("Distance (x)", &distanceLine[0], distanceLine.size());
+			if(!closingVelLine.empty())ImGui::PlotLines("Closing Velocity", &closingVelLine[0], closingVelLine.size());
 		}
 	}
 
