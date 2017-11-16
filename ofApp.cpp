@@ -22,13 +22,14 @@ void ofApp::reset() {
 //--------------------------------------------------------------
 void ofApp::update(){
 	float dt = ofClamp(ofGetLastFrameTime(), 0.0, 0.02);
-	if (!isRunning || dt == 0.0f) return;
 
-	if (isRunning) {
+	if (isRunning && dt > 0.0f) {
 		t += dt;
 		p1Pos += dt * p1Vel;
 		p2Pos += dt * p2Vel;
 	}
+	if (t >= MAX_TIME) isRunning = false;
+
 	distanceVector = (p1Pos - p2Pos).normalize();
 	closingVel = distanceVector.dot(p2Vel - p1Vel);
 }

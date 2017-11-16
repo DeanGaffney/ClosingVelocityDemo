@@ -36,4 +36,6 @@ class ofApp : public ofBaseApp{
 		ofVec3f p2StartPos, p2Pos, p2Vel;
 		ofVec3f distanceVector;
 		float closingVel;
+
+		const float MAX_TIME = 10.0f;
 };
